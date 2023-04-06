@@ -31,11 +31,19 @@ class Test_Home(BaseTest):
         homePage.get_order_for_year()
         time.sleep(30)'''
 
+    @pytest.mark.skip(reason="move on with next one ")
     def test_buy_30_days_old_spiritual_bestSeller(self):
         self.loginPage = LoginPage(self.driver)
         homePage = self.loginPage.do_login(TestData.USER_NAME , TestData.PASSWORD)
         homePage.books_click()
 
+    #@pytest.mark.skip(reason="move on with next one ")
+    def test_search_and_add_book_to_cart(self):
+
+        self.loginPage = LoginPage(self.driver)
+        homePage = self.loginPage.do_login(TestData.USER_NAME , TestData.PASSWORD)
+        homePage.books_buy()
+        time.sleep(10)
 
 
 

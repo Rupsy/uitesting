@@ -1,7 +1,7 @@
 import time
 from selenium.webdriver.support import expected_conditions as EC
-
-from selenium.webdriver import ActionChains
+import re
+from selenium.webdriver import ActionChains, Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -21,7 +21,7 @@ class HomePage(BasePage):
     PAGINATION = (By.XPATH , "//div[@class='a-text-center']/descendant::*/li")
     ORDER_DURATION= (By.CSS_SELECTOR , "#a-autoid-1-announce")
     ORDER_DURATION_LIST = (By.XPATH , "//ul[@class='a-nostyle a-list-link']/descendant::li")
-    BOOKS = (By.XPATH , "//header/div[@id='navbar']/div[@id='nav-main']/div[2]/div[1]/div[1]/a[9]")
+    BOOKS = (By.XPATH , "//header/div[@id='navbar']/div[@id='nav-main']/div[2]/div[2]/div[1]/a[9]")
     BOOKS_LAST_30_DAYS = (By.XPATH , "//span[contains(text(),'Last 30 days')]")
     BOOKS_LAST_90_DAYS = (By.XPATH , "//span[contains(text(),'Last 90 days')]")
 
@@ -30,7 +30,10 @@ class HomePage(BasePage):
     BOOKS_BEST_SELLER = (By.XPATH , "//span[contains(text(),'Best seller')]")
     BOOKS_PAGINATION = (By.XPATH , "//div[@class='s-pagination-strip']/descendant::span")
     BOOK_ITEMS = (By.XPATH , "//div[@class='sg-col-20-of-24 s-result-item s-asin sg-col-0-of-12 sg-col-16-of-20 sg-col s-widget-spacing-small sg-col-12-of-16']")
-
+    SEARCH = (By.ID , "twotabsearchtextbox")
+    SEARCH_ENTER = (By.XPATH , "//input[@id='nav-search-submit-button']")
+    ADD_TO_CART = (By.ID , "//input[@id='add-to-cart-button']")
+    IKIGAI = (By.XPATH , "//span[contains(text(),'Ikigai : Japanese Art of staying Young.. While growing Old')]")
 
 
 
@@ -113,10 +116,24 @@ class HomePage(BasePage):
             time.sleep(10)
             print("Page " + str(pagenum) + " grabbed")
 
+    def books_buy(self):
+        self.do_click(self.BOOKS)
+        self.do_send_key( self.SEARCH, "Ikigai")
+        self.do_click(self.SEARCH_ENTER)
+        books = self.driver.find_elements(By.XPATH ,"//div[@class='sg-col-20-of-24 s-result-item s-asin sg-col-0-of-12 sg-col-16-of-20 AdHolder sg-col s-widget-spacing-small sg-col-12-of-16']" )
+        txt = "Ikigai: The Japanese secret to a long and happy life"
+        not_needed_txt = "Transform Your Life with Robin Sharma"
+        for book in books:
+            self.driver.implicitly_wait(4)
+            print("book.text >>>>", book.text)
+            if txt in book.text and txt not in not_needed_txt:
+                print(".text @@@!!!!@@", book.text)
+                print("book.text @@@@@", book.text)
+                self.driver.implicitly_wait(4)
 
-
-
-
-
-
-
+                click_next = self.driver.find_element(By.XPATH , "//span[@class='a-size-medium a-color-base a-text-normal']").click()
+                #book.click()
+                time.sleep(10)
+                self.driver.switch_to.window(self.driver.window_handles[1])
+                time.sleep(10)
+                self.do_click(self.ADD_TO_CART)
