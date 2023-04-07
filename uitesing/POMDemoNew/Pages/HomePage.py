@@ -137,3 +137,28 @@ class HomePage(BasePage):
                 self.driver.switch_to.window(self.driver.window_handles[1])
                 time.sleep(10)
                 self.do_click(self.ADD_TO_CART)
+
+    def scroll_down(self):
+
+        last_height = self.driver.execute_script("return document.body.scrollHeight")
+        while True:
+
+            last_height = self.driver.execute_script("return document.body.scrollHeight")
+            # Scroll down to the bottom.
+            self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+            # Wait to load the page.
+            time.sleep(2)
+
+            # Calculate new scroll height and compare with last scroll height.
+            new_height = self.driver.execute_script("return document.body.scrollHeight")
+
+            if new_height == last_height:
+
+                break
+
+            last_height = new_height
+
+
+
+
